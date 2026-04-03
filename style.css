@@ -202,6 +202,34 @@ body {
 .package-cost {
   font-size: 12px;
   color: var(--text-dim);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.package-cost input[type="number"] {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  padding: 0 0 1px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-dim);
+  font-family: inherit;
+  outline: none;
+  width: 52px;
+  appearance: none;
+  -moz-appearance: textfield;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.package-card.active .package-cost input[type="number"] {
+  color: var(--text-muted);
+  border-bottom-color: #383838;
+  pointer-events: auto;
+  cursor: text;
 }
 
 /* Individual package input */

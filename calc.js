@@ -32,7 +32,7 @@ function calculate() {
   const variants  = Math.max(0, Math.round(num('variants')));
 
   // --- package ---
-  const pkgCosts   = PACKAGES[pkg].costs;
+  const pkgCosts   = Math.max(0, num(`${pkg}-cost`, PACKAGES[pkg].costs));
   const pkgRevenue = pkg === 'individual'
     ? Math.max(0, num('individual-price', 100000))
     : PACKAGES[pkg].revenue;
@@ -110,8 +110,13 @@ document.querySelectorAll('.package-card').forEach(card => {
     const radio = card.querySelector('input[type="radio"]');
     radio.checked = true;
 
-    const indInput = document.getElementById('individual-price');
-    indInput.tabIndex = card.dataset.package === 'individual' ? 0 : -1;
+    // enable cost + price inputs only for active card
+    document.querySelectorAll('.package-cost input, #individual-price').forEach(el => {
+      el.tabIndex = -1;
+    });
+    card.querySelectorAll('input[type="number"]').forEach(el => {
+      el.tabIndex = 0;
+    });
 
     calculate();
   });

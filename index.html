@@ -51,7 +51,11 @@
               <span class="tip" data-tip="Administrativa, technická implementace (včetně zálohy dat, bezpečnostní příprava, FTP), implementace pro 1 typ produktu, základní UI, testování">ⓘ</span>
             </div>
             <div class="package-price">20 000 Kč</div>
-            <div class="package-cost">Náklady: 4 500 Kč</div>
+            <div class="package-cost">
+              Náklady:
+              <input type="number" id="basic-cost" value="4500" min="0" tabindex="-1" />
+              Kč
+            </div>
           </div>
 
           <div class="package-card" data-package="extended">
@@ -61,7 +65,11 @@
               <span class="tip" data-tip="Administrativa, technická implementace (včetně zálohy dat, bezpečnostní příprava, FTP), implementace až pro 5 produktů, custom úpravy UI, testování">ⓘ</span>
             </div>
             <div class="package-price">45 000 Kč</div>
-            <div class="package-cost">Náklady: 22 000 Kč</div>
+            <div class="package-cost">
+              Náklady:
+              <input type="number" id="extended-cost" value="22000" min="0" tabindex="-1" />
+              Kč
+            </div>
           </div>
 
           <div class="package-card" data-package="individual">
@@ -74,7 +82,11 @@
               <input type="number" id="individual-price" value="100000" min="0" tabindex="-1" />
               <span class="individual-suffix">Kč</span>
             </div>
-            <div class="package-cost">Náklady: 4 800 Kč</div>
+            <div class="package-cost">
+              Náklady:
+              <input type="number" id="individual-cost" value="4800" min="0" tabindex="-1" />
+              Kč
+            </div>
           </div>
 
         </div>
