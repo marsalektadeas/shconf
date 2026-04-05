@@ -49,11 +49,11 @@ function calculate() {
 
   // --- monthly ---
   const moRevenue = monthlyFee;
-  const moProfit  = moRevenue - MONTHLY_FIXED_COSTS;
+  const moProfit  = moRevenue - (MONTHLY_FIXED_COSTS * eshops);
 
   // --- yearly ---
   const yrRevenue = oneRevenue + (moRevenue * 12);
-  const yrCosts   = oneCosts   + (MONTHLY_FIXED_COSTS * 12);
+  const yrCosts   = oneCosts   + (MONTHLY_FIXED_COSTS * eshops * 12);
   const yrProfit  = yrRevenue  - yrCosts;
 
   // --- update DOM ---
@@ -88,6 +88,7 @@ function calculate() {
 
   // monthly
   set('mo-revenue', fmt(moRevenue));
+  set('mo-costs', fmt(MONTHLY_FIXED_COSTS * eshops));
   setProfit('mo-profit', moProfit);
 
   // yearly
