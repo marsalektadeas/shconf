@@ -513,3 +513,88 @@ input[type="number"]::-webkit-outer-spin-button {
   color: var(--text);
   font-weight: 600;
 }
+
+/* ─── Print button ────────────────────────── */
+
+.print-btn {
+  display: block;
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 11px 0;
+  background: transparent;
+  border: 1px solid var(--border-hover);
+  border-radius: 9px;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.print-btn:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+/* ─── Print / PDF ─────────────────────────── */
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    background: #fff;
+    color: #111;
+  }
+
+  .form-panel,
+  .print-btn {
+    display: none !important;
+  }
+
+  .app {
+    display: block;
+  }
+
+  .results-panel {
+    background: #fff;
+    width: 100%;
+  }
+
+  .results-inner {
+    position: static;
+    height: auto;
+    padding: 40px 48px;
+  }
+
+  /* skrýt řádky s náklady */
+  #one-costs,
+  #mo-costs,
+  #yr-costs,
+  .result-row:has(#one-costs),
+  .result-row:has(#mo-costs),
+  .result-row:has(#yr-costs) {
+    display: none !important;
+  }
+
+  .results-company { color: #111; }
+  .results-title   { color: #888; }
+  .block-label     { color: #888; }
+  .r-label         { color: #555; }
+  .r-value         { color: #111; }
+  .r-value.profit  { color: #1a7a1a; }
+  .r-value.profit.negative { color: #c0392b; }
+  .r-value.margin  { color: #555; }
+  .divider         { background: #e0e0e0; }
+
+  .results-footer {
+    border-top-color: #e0e0e0;
+    color: #888;
+  }
+
+  .results-footer strong { color: #111; }
+}

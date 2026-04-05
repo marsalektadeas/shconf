@@ -41,8 +41,9 @@ function calculate() {
   const monthlyFee = FEE_FIRST + ((eshops - 1) * FEE_EXTRA) + (mutations * FEE_EXTRA);
 
   // --- one-time ---
-  const oneRevenue = pkgRevenue + (simple * 3000) + (complex * 5000) + (variants * 1000);
-  const oneCosts   = pkgCosts   + (simple * 1500) + (complex * 3000);
+  const totalShops = eshops + mutations;
+  const oneRevenue = pkgRevenue + (simple * 3000 * totalShops) + (complex * 5000 * totalShops) + (variants * 1000 * totalShops);
+  const oneCosts   = pkgCosts   + (simple * 1500 * totalShops) + (complex * 3000 * totalShops);
   const oneProfit  = oneRevenue - oneCosts;
   const oneMargin  = oneRevenue > 0 ? (oneProfit / oneRevenue) * 100 : 0;
 
