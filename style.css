@@ -514,6 +514,13 @@ input[type="number"]::-webkit-outer-spin-button {
   font-weight: 600;
 }
 
+/* ─── Print logo & stats (hidden in normal view) ─── */
+
+.print-logo,
+.print-stats {
+  display: none;
+}
+
 /* ─── Print button ────────────────────────── */
 
 .print-btn {
@@ -552,7 +559,8 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 
   .form-panel,
-  .print-btn {
+  .print-btn,
+  .results-footer {
     display: none !important;
   }
 
@@ -571,18 +579,29 @@ input[type="number"]::-webkit-outer-spin-button {
     padding: 40px 48px;
   }
 
+  /* logo */
+  .print-logo {
+    display: block;
+    margin-bottom: 36px;
+  }
+
+  .print-logo svg [fill="white"] {
+    fill: #111 !important;
+  }
+
+  /* skrýt původní header */
+  .results-company,
+  .results-title {
+    display: none !important;
+  }
+
   /* skrýt řádky s náklady */
-  #one-costs,
-  #mo-costs,
-  #yr-costs,
   .result-row:has(#one-costs),
   .result-row:has(#mo-costs),
   .result-row:has(#yr-costs) {
     display: none !important;
   }
 
-  .results-company { color: #111; }
-  .results-title   { color: #888; }
   .block-label     { color: #888; }
   .r-label         { color: #555; }
   .r-value         { color: #111; }
@@ -591,10 +610,37 @@ input[type="number"]::-webkit-outer-spin-button {
   .r-value.margin  { color: #555; }
   .divider         { background: #e0e0e0; }
 
-  .results-footer {
-    border-top-color: #e0e0e0;
-    color: #888;
+  /* print stat bloky */
+  .print-stats {
+    display: flex;
+    margin-top: 32px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
   }
 
-  .results-footer strong { color: #111; }
+  .print-stat {
+    flex: 1;
+    padding: 14px 18px;
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .print-stat:last-child {
+    border-right: none;
+  }
+
+  .print-stat-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+    margin-bottom: 5px;
+  }
+
+  .print-stat-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+  }
 }

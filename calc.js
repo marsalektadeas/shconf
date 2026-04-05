@@ -79,6 +79,11 @@ function calculate() {
   }
   feeResultsEl.textContent = fmt(monthlyFee);
 
+  // print stats
+  document.getElementById('print-eshops').textContent = eshops;
+  document.getElementById('print-mutations').textContent = mutations;
+  document.getElementById('print-fee').textContent = fmt(monthlyFee);
+
   // one-time
   set('one-revenue', fmt(oneRevenue));
   set('one-costs',   fmt(oneCosts));
