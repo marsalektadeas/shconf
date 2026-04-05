@@ -4,7 +4,7 @@ const PACKAGES = {
   individual: { revenue: 100000, costs: 4800  },
 };
 
-const MONTHLY_FIXED_COSTS = 8000;
+const MONTHLY_FIXED_COSTS = 500;
 const FEE_FIRST  = 490;
 const FEE_EXTRA  = 245;
 
