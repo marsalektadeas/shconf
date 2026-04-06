@@ -142,5 +142,26 @@ document.querySelectorAll('input').forEach(input => {
   input.addEventListener('input', calculate);
 });
 
+// --- Reset ---
+const DEFAULTS = {
+  company: '', eshops: 1, mutations: 1,
+  'basic-cost': 4500, 'extended-cost': 22000,
+  'individual-price': 100000, 'individual-cost': 4800,
+  simple: 0, 'simple-revenue': 3000, 'simple-cost': 1500,
+  complex: 0, 'complex-revenue': 5000, 'complex-cost': 3000,
+  variants: 0, 'variants-revenue': 1000, 'variants-cost': 0,
+};
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  for (const [id, val] of Object.entries(DEFAULTS)) {
+    document.getElementById(id).value = val;
+  }
+  // reset package to basic
+  document.querySelectorAll('.package-card').forEach(c => c.classList.remove('active'));
+  document.querySelector('.package-card[data-package="basic"]').classList.add('active');
+  document.querySelector('input[name="package"][value="basic"]').checked = true;
+  calculate();
+});
+
 // --- Initial run ---
 calculate();
