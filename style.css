@@ -319,6 +319,29 @@ body {
   margin-top: 2px;
 }
 
+.meta-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  padding: 0 0 1px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+  font-family: inherit;
+  outline: none;
+  width: 44px;
+  appearance: none;
+  -moz-appearance: textfield;
+  transition: border-color 0.15s;
+}
+
+.meta-input:hover,
+.meta-input:focus {
+  border-bottom-color: var(--border-hover);
+  color: var(--text);
+}
+
 .upsell-item input[type="number"] {
   width: 80px;
   background: var(--bg-input);

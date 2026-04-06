@@ -40,10 +40,18 @@ function calculate() {
   // --- monthly fee (každý e-shop má default 1 mutaci; každá další mutace +245 Kč/e-shop) ---
   const monthlyFee = eshops * (FEE_FIRST + (mutations - 1) * FEE_EXTRA);
 
+  // --- upsell rates ---
+  const simpleRevenue   = Math.max(0, num('simple-revenue',   3000));
+  const simpleCost      = Math.max(0, num('simple-cost',      1500));
+  const complexRevenue  = Math.max(0, num('complex-revenue',  5000));
+  const complexCost     = Math.max(0, num('complex-cost',     3000));
+  const variantsRevenue = Math.max(0, num('variants-revenue', 1000));
+  const variantsCost    = Math.max(0, num('variants-cost',       0));
+
   // --- one-time ---
   const totalShops = eshops * mutations;
-  const oneRevenue = pkgRevenue + (simple * 3000 * totalShops) + (complex * 5000 * totalShops) + (variants * 1000 * totalShops);
-  const oneCosts   = pkgCosts   + (simple * 1500 * totalShops) + (complex * 3000 * totalShops);
+  const oneRevenue = pkgRevenue + (simple * simpleRevenue * totalShops) + (complex * complexRevenue * totalShops) + (variants * variantsRevenue * totalShops);
+  const oneCosts   = pkgCosts   + (simple * simpleCost   * totalShops) + (complex * complexCost   * totalShops) + (variants * variantsCost    * totalShops);
   const oneProfit  = oneRevenue - oneCosts;
   const oneMargin  = oneRevenue > 0 ? (oneProfit / oneRevenue) * 100 : 0;
 

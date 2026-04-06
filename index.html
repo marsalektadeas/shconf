@@ -107,7 +107,10 @@
                 Jednoduché produkty
                 <span class="tip" data-tip="Tričko, ručník — startovní čas ~2 hod / produkt">ⓘ</span>
               </div>
-              <div class="upsell-meta">Výnos 3 000 Kč &nbsp;·&nbsp; náklad 1 500 Kč / ks</div>
+              <div class="upsell-meta">
+                Výnos <input type="number" class="meta-input" id="simple-revenue" value="3000" min="0" /> Kč
+                &nbsp;·&nbsp; náklad <input type="number" class="meta-input" id="simple-cost" value="1500" min="0" /> Kč / ks
+              </div>
             </div>
             <input type="number" id="simple" value="0" min="0" />
           </div>
@@ -118,7 +121,10 @@
                 Složité produkty
                 <span class="tip" data-tip="Detailní maskování, více ploch">ⓘ</span>
               </div>
-              <div class="upsell-meta">Výnos 5 000 Kč &nbsp;·&nbsp; náklad 3 000 Kč / ks</div>
+              <div class="upsell-meta">
+                Výnos <input type="number" class="meta-input" id="complex-revenue" value="5000" min="0" /> Kč
+                &nbsp;·&nbsp; náklad <input type="number" class="meta-input" id="complex-cost" value="3000" min="0" /> Kč / ks
+              </div>
             </div>
             <input type="number" id="complex" value="0" min="0" />
           </div>
@@ -127,9 +133,12 @@
             <div class="upsell-info">
               <div class="upsell-name">
                 Varianty
-                <span class="tip" data-tip="Další střih / úhel — výnos 1 000 Kč, náklad 0 Kč">ⓘ</span>
+                <span class="tip" data-tip="Další střih / úhel">ⓘ</span>
               </div>
-              <div class="upsell-meta">Výnos 1 000 Kč &nbsp;·&nbsp; náklad 0 Kč / ks</div>
+              <div class="upsell-meta">
+                Výnos <input type="number" class="meta-input" id="variants-revenue" value="1000" min="0" /> Kč
+                &nbsp;·&nbsp; náklad <input type="number" class="meta-input" id="variants-cost" value="0" min="0" /> Kč / ks
+              </div>
             </div>
             <input type="number" id="variants" value="0" min="0" />
           </div>
