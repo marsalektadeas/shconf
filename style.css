@@ -96,6 +96,12 @@ body {
   gap: 20px;
 }
 
+.field-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
 .fee-hint {
   margin-top: 16px;
   font-size: 12px;
