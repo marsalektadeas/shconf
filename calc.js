@@ -25,7 +25,7 @@ function calculate() {
   // --- inputs ---
   const company   = document.getElementById('company').value.trim();
   const eshops    = Math.max(1, Math.round(num('eshops', 1)));
-  const mutations = Math.max(0, Math.round(num('mutations', 0)));
+  const mutations = Math.max(1, Math.round(num('mutations', 1)));
   const pkg       = document.querySelector('input[name="package"]:checked').value;
   const simple    = Math.max(0, Math.round(num('simple')));
   const complex   = Math.max(0, Math.round(num('complex')));
@@ -37,11 +37,11 @@ function calculate() {
     ? Math.max(0, num('individual-price', 100000))
     : PACKAGES[pkg].revenue;
 
-  // --- monthly fee (mutace přidávají 245 Kč stejně jako další e-shop) ---
-  const monthlyFee = FEE_FIRST + ((eshops - 1) * FEE_EXTRA) + (mutations * FEE_EXTRA);
+  // --- monthly fee (každý e-shop má default 1 mutaci; každá další mutace +245 Kč/e-shop) ---
+  const monthlyFee = eshops * (FEE_FIRST + (mutations - 1) * FEE_EXTRA);
 
   // --- one-time ---
-  const totalShops = eshops + mutations;
+  const totalShops = eshops * mutations;
   const oneRevenue = pkgRevenue + (simple * 3000 * totalShops) + (complex * 5000 * totalShops) + (variants * 1000 * totalShops);
   const oneCosts   = pkgCosts   + (simple * 1500 * totalShops) + (complex * 3000 * totalShops);
   const oneProfit  = oneRevenue - oneCosts;
