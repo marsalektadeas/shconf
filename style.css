@@ -726,6 +726,13 @@ input[type="number"]::-webkit-outer-spin-button {
     color: #111;
   }
 
+  .cp-pkg-desc {
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
   .cp-product-line {
     font-size: 14px;
     color: #444;
