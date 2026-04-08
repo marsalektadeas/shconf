@@ -569,23 +569,31 @@ input[type="number"]::-webkit-outer-spin-button {
 /* ─── Print logo & stats (hidden in normal view) ─── */
 
 .print-logo,
-.print-stats {
+.print-stats,
+.client-print-layout,
+.print-internal-extra {
   display: none;
+}
+
+/* ─── Print buttons ───────────────────────── */
+
+.print-btns {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
 /* ─── Print button ────────────────────────── */
 
 .print-btn {
-  display: block;
-  width: 100%;
-  margin-bottom: 24px;
+  flex: 1;
   padding: 11px 0;
   background: transparent;
   border: 1px solid var(--border-hover);
   border-radius: 9px;
   color: var(--text-muted);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.5px;
   cursor: pointer;
@@ -595,6 +603,16 @@ input[type="number"]::-webkit-outer-spin-button {
 .print-btn:hover {
   border-color: var(--text-muted);
   color: var(--text);
+}
+
+.print-btn--internal {
+  border-color: var(--border);
+  color: var(--text-dim);
+}
+
+.print-btn--internal:hover {
+  border-color: var(--border-hover);
+  color: var(--text-muted);
 }
 
 /* ─── Print / PDF ─────────────────────────── */
@@ -611,14 +629,12 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 
   .form-panel,
-  .print-btn,
+  .print-btns,
   .results-footer {
     display: none !important;
   }
 
-  .app {
-    display: block;
-  }
+  .app { display: block; }
 
   .results-panel {
     background: #fff;
@@ -631,39 +647,120 @@ input[type="number"]::-webkit-outer-spin-button {
     padding: 40px 48px;
   }
 
-  /* logo */
-  .print-logo {
+  /* ── KLIENTSKÝ EXPORT ── */
+  body.print-client .print-logo,
+  body.print-client .results-header,
+  body.print-client .results-block,
+  body.print-client .divider,
+  body.print-client .print-stats,
+  body.print-client .print-internal-extra {
+    display: none !important;
+  }
+
+  body.print-client .client-print-layout {
+    display: block;
+  }
+
+  /* client layout styles */
+  .cp-logo { margin-bottom: 32px; }
+
+  .cp-header { margin-bottom: 20px; }
+
+  .cp-company {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: -0.3px;
+  }
+
+  .cp-subtitle {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+    margin-top: 4px;
+  }
+
+  .cp-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 16px 0;
+  }
+
+  .cp-section { margin-bottom: 4px; }
+
+  .cp-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+    margin-bottom: 8px;
+  }
+
+  .cp-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 6px;
+  }
+
+  .cp-row strong {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+  }
+
+  .cp-pkg-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+  }
+
+  .cp-pkg-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111;
+  }
+
+  .cp-product-line {
+    font-size: 14px;
+    color: #444;
+    padding: 3px 0;
+  }
+
+  .cp-footer-stats {
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+  }
+
+  /* ── INTERNÍ EXPORT ── */
+  body.print-internal .client-print-layout {
+    display: none !important;
+  }
+
+  body.print-internal .print-logo {
     display: block;
     margin-bottom: 36px;
   }
 
-  .print-logo svg [fill="white"] {
+  body.print-internal .print-logo svg [fill="white"] {
     fill: #111 !important;
   }
 
-  /* skrýt původní header */
-  .results-company,
-  .results-title {
-    display: none !important;
+  body.print-internal .results-company,
+  body.print-internal .results-title {
+    display: block;
   }
 
-  /* skrýt řádky s náklady */
-  .result-row:has(#one-costs),
-  .result-row:has(#mo-costs),
-  .result-row:has(#yr-costs) {
-    display: none !important;
-  }
+  body.print-internal .results-company { font-size: 20px; color: #111; }
+  body.print-internal .results-title   { color: #888; }
 
-  .block-label     { color: #888; }
-  .r-label         { color: #555; }
-  .r-value         { color: #111; }
-  .r-value.profit  { color: #1a7a1a; }
-  .r-value.profit.negative { color: #c0392b; }
-  .r-value.margin  { color: #555; }
-  .divider         { background: #e0e0e0; }
-
-  /* print stat bloky */
-  .print-stats {
+  body.print-internal .print-stats {
     display: flex;
     margin-top: 32px;
     border: 1px solid #e0e0e0;
@@ -671,15 +768,47 @@ input[type="number"]::-webkit-outer-spin-button {
     overflow: hidden;
   }
 
+  body.print-internal .print-internal-extra {
+    display: block;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .int-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+    margin-bottom: 10px;
+  }
+
+  .int-product-line {
+    font-size: 13px;
+    color: #444;
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .int-product-line:last-child { border-bottom: none; }
+
+  .block-label     { color: #888; }
+  .r-label         { color: #555; }
+  .r-value         { color: #111; }
+  .r-value.dim     { color: #888; }
+  .r-value.profit  { color: #1a7a1a; }
+  .r-value.profit.negative { color: #c0392b; }
+  .r-value.margin  { color: #555; }
+  .divider         { background: #e0e0e0; }
+
   .print-stat {
     flex: 1;
     padding: 14px 18px;
     border-right: 1px solid #e0e0e0;
   }
 
-  .print-stat:last-child {
-    border-right: none;
-  }
+  .print-stat:last-child { border-right: none; }
 
   .print-stat-label {
     font-size: 9px;

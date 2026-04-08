@@ -87,10 +87,45 @@ function calculate() {
   }
   feeResultsEl.textContent = fmt(monthlyFee);
 
-  // print stats
+  // print stats (internal)
   document.getElementById('print-eshops').textContent = eshops;
   document.getElementById('print-mutations').textContent = mutations;
   document.getElementById('print-fee').textContent = fmt(monthlyFee);
+
+  // --- client print layout ---
+  const pkgNames = { basic: 'Základní', extended: 'Rozšířený', individual: 'Individuální' };
+  document.getElementById('cp-company').textContent = company || '—';
+  document.getElementById('cp-pkg-name').textContent = pkgNames[pkg];
+  document.getElementById('cp-pkg-price').textContent = fmt(pkgRevenue);
+  document.getElementById('cp-one-revenue').textContent = fmt(oneRevenue);
+  document.getElementById('cp-monthly-fee').textContent = fmt(moRevenue) + '\u00a0/ měs.';
+
+  const productLines = [];
+  if (simple > 0) productLines.push(`${simple} jednoduch${simple === 1 ? 'ý produkt' : simple < 5 ? 'é produkty' : 'ých produktů'}`);
+  if (complex > 0) productLines.push(`${complex} složit${complex === 1 ? 'ý produkt' : complex < 5 ? 'é produkty' : 'ých produktů'}`);
+  if (variants > 0) productLines.push(`${variants} variant${variants === 1 ? 'a' : variants < 5 ? 'y' : ''}`);
+
+  const cpWrap = document.getElementById('cp-products-wrap');
+  if (productLines.length > 0) {
+    document.getElementById('cp-products-list').innerHTML =
+      productLines.map(l => `<div class="cp-product-line">${l}</div>`).join('');
+    cpWrap.style.display = '';
+  } else {
+    cpWrap.style.display = 'none';
+  }
+
+  const eshopsStr = eshops === 1 ? '1 e-shop' : `${eshops} e-shopy`;
+  const mutationsStr = `${mutations}\u00a0${mutations === 1 ? 'mutace' : mutations < 5 ? 'mutace' : 'mutací'}`;
+  document.getElementById('cp-eshops-info').textContent = `${eshopsStr}\u00a0·\u00a0${mutationsStr}`;
+
+  // --- internal extra: product detail ---
+  const intLines = [];
+  if (simple > 0)   intLines.push(`Jednoduché: ${simple}\u00a0ks · výnos ${fmt(simpleRevenue)}/ks · náklad ${fmt(simpleCost)}/ks`);
+  if (complex > 0)  intLines.push(`Složité: ${complex}\u00a0ks · výnos ${fmt(complexRevenue)}/ks · náklad ${fmt(complexCost)}/ks`);
+  if (variants > 0) intLines.push(`Varianty: ${variants}\u00a0ks · výnos ${fmt(variantsRevenue)}/ks · náklad ${fmt(variantsCost)}/ks`);
+  document.getElementById('int-products-list').innerHTML = intLines.length > 0
+    ? intLines.map(l => `<div class="int-product-line">${l}</div>`).join('')
+    : '<div class="int-product-line">—</div>';
 
   // one-time
   set('one-revenue', fmt(oneRevenue));
@@ -161,6 +196,16 @@ document.getElementById('reset-btn').addEventListener('click', () => {
   document.querySelector('.package-card[data-package="basic"]').classList.add('active');
   document.querySelector('input[name="package"][value="basic"]').checked = true;
   calculate();
+});
+
+// --- Print modes ---
+function printAs(mode) {
+  document.body.classList.add('print-' + mode);
+  window.print();
+}
+
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('print-client', 'print-internal');
 });
 
 // --- Initial run ---
