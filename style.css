@@ -719,6 +719,8 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* ─── Print / PDF ─────────────────────────── */
 
+.int-pkg-block { display: none; }
+
 @media print {
   * {
     -webkit-print-color-adjust: exact;
@@ -755,7 +757,8 @@ input[type="number"]::-webkit-outer-spin-button {
   body.print-client .results-block,
   body.print-client .divider,
   body.print-client .print-stats,
-  body.print-client .print-internal-extra {
+  body.print-client .print-internal-extra,
+  body.print-client .int-pkg-block {
     display: none !important;
   }
 
@@ -874,6 +877,14 @@ input[type="number"]::-webkit-outer-spin-button {
     margin-top: 4px;
   }
 
+  .cp-vat-note {
+    font-size: 10px;
+    color: #bbb;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e0e0e0;
+  }
+
   /* ── INTERNÍ EXPORT ── */
   body.print-internal .client-print-layout {
     display: none !important;
@@ -904,11 +915,43 @@ input[type="number"]::-webkit-outer-spin-button {
     overflow: hidden;
   }
 
+  body.print-internal .int-pkg-block {
+    display: block;
+  }
+
   body.print-internal .print-internal-extra {
     display: block;
     margin-top: 28px;
     padding-top: 24px;
     border-top: 1px solid #e0e0e0;
+  }
+
+  .int-pkg-block {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .int-pkg-name {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #999;
+    margin-bottom: 4px;
+  }
+
+  .int-pkg-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 6px;
+  }
+
+  .int-pkg-desc {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.5;
   }
 
   .int-label {

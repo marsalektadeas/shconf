@@ -99,11 +99,17 @@ function calculate() {
 
   // --- client print layout ---
   const pkgNames = { basic: 'Základní', extended: 'Rozšířený', individual: 'Individuální' };
+  const pkgTip = document.querySelector(`.package-card[data-package="${pkg}"] .tip`)?.dataset.tip || '';
+
   document.getElementById('cp-company').textContent = company || '—';
   document.getElementById('cp-pkg-name').textContent = pkgNames[pkg];
   document.getElementById('cp-pkg-price').textContent = fmt(pkgRevenue);
-  const pkgTip = document.querySelector(`.package-card[data-package="${pkg}"] .tip`)?.dataset.tip || '';
   document.getElementById('cp-pkg-desc').textContent = pkgTip;
+
+  // --- internal: package info ---
+  document.getElementById('int-pkg-name').textContent = pkgNames[pkg];
+  document.getElementById('int-pkg-price').textContent = fmt(pkgRevenue);
+  document.getElementById('int-pkg-desc').textContent = pkgTip;
   document.getElementById('cp-one-revenue').textContent = fmt(oneRevenueBase);
   const cpDiscountWrap = document.getElementById('cp-discount-wrap');
   const cpAfterWrap    = document.getElementById('cp-after-discount-wrap');
