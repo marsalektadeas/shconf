@@ -4,7 +4,7 @@ const PACKAGES = {
   individual: { revenue: 100000, costs: 4800  },
 };
 
-const MONTHLY_FIXED_COSTS = 500;
+const MONTHLY_FIXED_COSTS = 0;
 const FEE_FIRST  = 490;
 const FEE_EXTRA  = 245;
 
@@ -30,15 +30,18 @@ function calculate() {
   const simple    = Math.max(0, Math.round(num('simple')));
   const complex   = Math.max(0, Math.round(num('complex')));
   const variants  = Math.max(0, Math.round(num('variants')));
+  const discount  = Math.max(0, num('discount', 0));
 
   // --- package ---
-  const pkgCosts   = Math.max(0, num(`${pkg}-cost`, PACKAGES[pkg].costs));
-  const pkgRevenue = pkg === 'individual'
-    ? Math.max(0, num('individual-price', 100000))
-    : PACKAGES[pkg].revenue;
+  // 1 mutace zahrnuta v ceně, každá další = 50 % ceny balíčku / e-shop
+  const mutationMultiplier = 1 + (mutations - 1) * 0.5;
+  const pkgCosts   = Math.max(0, num(`${pkg}-cost`, PACKAGES[pkg].costs)) * eshops * mutationMultiplier;
+  const pkgRevenueDefaults = { basic: 20000, extended: 45000, individual: 100000 };
+  const pkgRevenue = Math.max(0, num(`${pkg}-price`, pkgRevenueDefaults[pkg])) * eshops * mutationMultiplier;
 
   // --- monthly fee (každý e-shop má default 1 mutaci; každá další mutace +245 Kč/e-shop) ---
-  const monthlyFee = eshops * (FEE_FIRST + (mutations - 1) * FEE_EXTRA);
+  const feeEnabled = document.getElementById('fee-enabled').checked;
+  const monthlyFee = feeEnabled ? eshops * (FEE_FIRST + (mutations - 1) * FEE_EXTRA) : 0;
 
   // --- upsell rates ---
   const simpleRevenue   = Math.max(0, num('simple-revenue',   3000));
@@ -50,7 +53,8 @@ function calculate() {
 
   // --- one-time ---
   const totalShops = eshops * mutations;
-  const oneRevenue = pkgRevenue + (simple * simpleRevenue * totalShops) + (complex * complexRevenue * totalShops) + (variants * variantsRevenue * totalShops);
+  const oneRevenueBase = pkgRevenue + (simple * simpleRevenue * totalShops) + (complex * complexRevenue * totalShops) + (variants * variantsRevenue * totalShops);
+  const oneRevenue = Math.max(0, oneRevenueBase - discount);
   const oneCosts   = pkgCosts   + (simple * simpleCost   * totalShops) + (complex * complexCost   * totalShops) + (variants * variantsCost    * totalShops);
   const oneProfit  = oneRevenue - oneCosts;
   const oneMargin  = oneRevenue > 0 ? (oneProfit / oneRevenue) * 100 : 0;
@@ -69,6 +73,7 @@ function calculate() {
 
   // fee hint in form
   document.getElementById('monthly-fee-display').textContent = fmt(monthlyFee);
+  document.getElementById('fee-hint-value').style.opacity = feeEnabled ? '1' : '0.3';
 
   // footer
   const eshopsEl    = document.getElementById('eshops-display');
@@ -99,18 +104,41 @@ function calculate() {
   document.getElementById('cp-pkg-price').textContent = fmt(pkgRevenue);
   const pkgTip = document.querySelector(`.package-card[data-package="${pkg}"] .tip`)?.dataset.tip || '';
   document.getElementById('cp-pkg-desc').textContent = pkgTip;
-  document.getElementById('cp-one-revenue').textContent = fmt(oneRevenue);
-  document.getElementById('cp-monthly-fee').textContent = fmt(moRevenue) + '\u00a0/ měs.';
+  document.getElementById('cp-one-revenue').textContent = fmt(oneRevenueBase);
+  const cpDiscountWrap = document.getElementById('cp-discount-wrap');
+  const cpAfterWrap    = document.getElementById('cp-after-discount-wrap');
+  if (discount > 0) {
+    document.getElementById('cp-discount').textContent = '−\u00a0' + fmt(discount);
+    document.getElementById('cp-one-revenue-after').textContent = fmt(oneRevenue);
+    cpDiscountWrap.style.display = '';
+    cpAfterWrap.style.display = '';
+  } else {
+    cpDiscountWrap.style.display = 'none';
+    cpAfterWrap.style.display = 'none';
+  }
+  const cpFeeRow = document.getElementById('cp-monthly-fee').closest('.cp-row');
+  if (feeEnabled) {
+    document.getElementById('cp-monthly-fee').textContent = fmt(moRevenue) + '\u00a0/ měs.';
+    cpFeeRow.style.display = '';
+  } else {
+    cpFeeRow.style.display = 'none';
+  }
 
-  const productLines = [];
-  if (simple > 0) productLines.push(`${simple} jednoduch${simple === 1 ? 'ý produkt' : simple < 5 ? 'é produkty' : 'ých produktů'}`);
-  if (complex > 0) productLines.push(`${complex} složit${complex === 1 ? 'ý produkt' : complex < 5 ? 'é produkty' : 'ých produktů'}`);
-  if (variants > 0) productLines.push(`${variants} variant${variants === 1 ? 'a' : variants < 5 ? 'y' : ''}`);
+  const cpProducts = [];
+  if (simple > 0)   cpProducts.push({ name: 'Jednoduché produkty', count: simple,   price: simpleRevenue });
+  if (complex > 0)  cpProducts.push({ name: 'Složité produkty',    count: complex,  price: complexRevenue });
+  if (variants > 0) cpProducts.push({ name: 'Varianty',            count: variants, price: variantsRevenue });
 
   const cpWrap = document.getElementById('cp-products-wrap');
-  if (productLines.length > 0) {
+  if (cpProducts.length > 0) {
     document.getElementById('cp-products-list').innerHTML =
-      productLines.map(l => `<div class="cp-product-line">${l}</div>`).join('');
+      cpProducts.map(p =>
+        `<div class="cp-product-line">
+          <span class="cp-pl-name">${p.name}</span>
+          <span class="cp-pl-count">${p.count * totalShops}&nbsp;ks</span>
+          <span class="cp-pl-price">${fmt(p.count * p.price * totalShops)}&nbsp;celkem</span>
+        </div>`
+      ).join('');
     cpWrap.style.display = '';
   } else {
     cpWrap.style.display = 'none';
@@ -121,16 +149,47 @@ function calculate() {
   document.getElementById('cp-eshops-info').textContent = `${eshopsStr}\u00a0·\u00a0${mutationsStr}`;
 
   // --- internal extra: product detail ---
-  const intLines = [];
-  if (simple > 0)   intLines.push(`Jednoduché: ${simple}\u00a0ks · výnos ${fmt(simpleRevenue)}/ks · náklad ${fmt(simpleCost)}/ks`);
-  if (complex > 0)  intLines.push(`Složité: ${complex}\u00a0ks · výnos ${fmt(complexRevenue)}/ks · náklad ${fmt(complexCost)}/ks`);
-  if (variants > 0) intLines.push(`Varianty: ${variants}\u00a0ks · výnos ${fmt(variantsRevenue)}/ks · náklad ${fmt(variantsCost)}/ks`);
-  document.getElementById('int-products-list').innerHTML = intLines.length > 0
-    ? intLines.map(l => `<div class="int-product-line">${l}</div>`).join('')
-    : '<div class="int-product-line">—</div>';
+  const intProducts = [];
+  if (simple > 0)   intProducts.push({ name: 'Jednoduché', count: simple,   price: simpleRevenue,   cost: simpleCost });
+  if (complex > 0)  intProducts.push({ name: 'Složité',    count: complex,  price: complexRevenue,  cost: complexCost });
+  if (variants > 0) intProducts.push({ name: 'Varianty',   count: variants, price: variantsRevenue, cost: variantsCost });
+
+  const intEl = document.getElementById('int-products-list');
+  if (intProducts.length > 0) {
+    const header = `<div class="int-product-header">
+      <span>Typ</span><span>Ks</span><span>Cena/ks</span><span>Náklad/ks</span><span>Výnos</span><span>Marže</span>
+    </div>`;
+    const rows = intProducts.map(p => {
+      const rev = p.count * p.price * totalShops;
+      const cst = p.count * p.cost * totalShops;
+      const margin = rev > 0 ? Math.round((rev - cst) / rev * 100) : 0;
+      return `<div class="int-product-line">
+        <span>${p.name}</span>
+        <span>${p.count * totalShops}&nbsp;ks</span>
+        <span>${fmt(p.price)}</span>
+        <span>${fmt(p.cost)}</span>
+        <span>${fmt(rev)}</span>
+        <span>${margin}&nbsp;%</span>
+      </div>`;
+    }).join('');
+    intEl.innerHTML = header + rows;
+  } else {
+    intEl.innerHTML = '<div class="int-product-empty">—</div>';
+  }
 
   // one-time
-  set('one-revenue', fmt(oneRevenue));
+  const intDiscountRow     = document.getElementById('int-discount-row');
+  const intRevenueAfterRow = document.getElementById('int-revenue-after-row');
+  if (discount > 0) {
+    document.getElementById('int-discount').textContent = '−\u00a0' + fmt(discount);
+    document.getElementById('int-revenue-after').textContent = fmt(oneRevenue);
+    intDiscountRow.style.display = '';
+    intRevenueAfterRow.style.display = '';
+  } else {
+    intDiscountRow.style.display = 'none';
+    intRevenueAfterRow.style.display = 'none';
+  }
+  set('one-revenue', fmt(oneRevenueBase));
   set('one-costs',   fmt(oneCosts));
   setProfit('one-profit', oneProfit);
   document.getElementById('one-margin').textContent =
@@ -163,7 +222,7 @@ document.querySelectorAll('.package-card').forEach(card => {
     radio.checked = true;
 
     // enable cost + price inputs only for active card
-    document.querySelectorAll('.package-cost input, #individual-price').forEach(el => {
+    document.querySelectorAll('.package-cost input, .package-price input[type="number"]').forEach(el => {
       el.tabIndex = -1;
     });
     card.querySelectorAll('input[type="number"]').forEach(el => {
@@ -177,12 +236,14 @@ document.querySelectorAll('.package-card').forEach(card => {
 // --- Listen to all inputs ---
 document.querySelectorAll('input').forEach(input => {
   input.addEventListener('input', calculate);
+  input.addEventListener('change', calculate);
 });
 
 // --- Reset ---
 const DEFAULTS = {
-  company: '', eshops: 1, mutations: 1,
-  'basic-cost': 4500, 'extended-cost': 22000,
+  company: '', eshops: 1, mutations: 1, discount: 0,
+  'basic-price': 20000, 'basic-cost': 4500,
+  'extended-price': 45000, 'extended-cost': 22000,
   'individual-price': 100000, 'individual-cost': 4800,
   simple: 0, 'simple-revenue': 3000, 'simple-cost': 1500,
   complex: 0, 'complex-revenue': 5000, 'complex-cost': 3000,

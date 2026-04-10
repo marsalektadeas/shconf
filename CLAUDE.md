@@ -34,14 +34,34 @@ one_time_revenue = pkg_revenue + (simple*3000) + (complex*5000) + (variants*1000
 one_time_cost    = pkg_cost    + (simple*1500) + (complex*3000)
 one_time_profit  = one_time_revenue - one_time_cost
 
-monthly_profit = monthly_fee - 500    // 500 = náklady na provoz celého projektu
+monthly_profit = monthly_fee    // náklady na provoz = 0
 
 year_revenue = one_time_revenue + (monthly_fee * 12)
-year_cost    = one_time_cost    + (8000 * 12)
+year_cost    = one_time_cost    // náklady na provoz = 0
 year_profit  = year_revenue - year_cost
 ```
 
 Náklady balíčků jsou editovatelné (`#basic-cost`, `#extended-cost`, `#individual-cost`) — výchozí hodnoty: 4500 / 22000 / 4800 Kč.
+
+## Export systém
+
+Dva PDF exporty — oba přes `printAs(mode)` v `calc.js`, který přidá třídu na `<body>` a zavolá `window.print()`. Po tisku ji `afterprint` event odstraní.
+
+```
+printAs('client')   → body.print-client
+printAs('internal') → body.print-internal
+```
+
+CSS v `@media print` pak podle třídy na `<body>` zobrazí správnou sekci:
+
+- `body.print-client` → zobrazí `.client-print-layout`, skryje `.results-block` a `.print-stats`
+- `body.print-internal` → zobrazí vše včetně `.print-internal-extra` (detail produktů s sazbami)
+
+### Klientský export (`cp-*` IDs)
+Samostatný HTML blok `.client-print-layout` s vlastními elementy (`#cp-company`, `#cp-pkg-name`, `#cp-pkg-price`, `#cp-pkg-desc`, `#cp-one-revenue`, `#cp-monthly-fee`, `#cp-products-list`). Popis balíčku se tahá z `data-tip` atributu aktivní `.package-card .tip`. Nezobrazuje žádné náklady, zisky ani marže.
+
+### Interní export (`int-*` IDs, `print-*` IDs)
+Používá existující `.results-block` elementy (vše viditelné) + `.print-internal-extra` s `#int-products-list` (počty a sazby produktů) + `.print-stats` (e-shopy, mutace, fee).
 
 ## Deploy
 

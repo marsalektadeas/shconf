@@ -37,10 +37,16 @@
           <div class="field">
             <label for="mutations">Počet mutací</label>
             <input type="number" id="mutations" value="1" min="1" />
-            <div class="field-hint">1 mutace je zahrnuta automaticky</div>
+            <div class="field-hint">Celkový počet mutací včetně výchozí</div>
           </div>
         </div>
-        <div class="fee-hint">Měsíční fee: <strong id="monthly-fee-display">490 Kč</strong> &nbsp;·&nbsp; 490 Kč × e-shopy, každá další mutace +245 Kč / e-shop</div>
+        <div class="fee-hint">
+          <label class="fee-toggle">
+            <input type="checkbox" id="fee-enabled" checked />
+            <span>Měsíční fee</span>
+          </label>
+          <span id="fee-hint-value">: <strong id="monthly-fee-display">490 Kč</strong> &nbsp;·&nbsp; 490 Kč × e-shopy, každá další mutace +245 Kč / e-shop</span>
+        </div>
       </section>
 
       <!-- Section 2 -->
@@ -54,7 +60,10 @@
               Základní
               <span class="tip" data-tip="Administrativa, technická implementace (včetně zálohy dat, bezpečnostní příprava, FTP), implementace pro 1 typ produktu, základní UI, testování">ⓘ</span>
             </div>
-            <div class="package-price">20 000 Kč</div>
+            <div class="package-price">
+              <input type="number" id="basic-price" value="20000" min="0" tabindex="-1" />
+              <span class="individual-suffix">Kč</span>
+            </div>
             <div class="package-cost">
               Náklady:
               <input type="number" id="basic-cost" value="4500" min="0" tabindex="-1" />
@@ -68,7 +77,10 @@
               Rozšířený
               <span class="tip" data-tip="Administrativa, technická implementace (včetně zálohy dat, bezpečnostní příprava, FTP), implementace až pro 5 produktů, custom úpravy UI, testování">ⓘ</span>
             </div>
-            <div class="package-price">45 000 Kč</div>
+            <div class="package-price">
+              <input type="number" id="extended-price" value="45000" min="0" tabindex="-1" />
+              <span class="individual-suffix">Kč</span>
+            </div>
             <div class="package-cost">
               Náklady:
               <input type="number" id="extended-cost" value="22000" min="0" tabindex="-1" />
@@ -93,6 +105,13 @@
             </div>
           </div>
 
+        </div>
+        <div class="discount-row">
+          <label for="discount">Sleva</label>
+          <div class="discount-input-wrap">
+            <input type="number" id="discount" value="0" min="0" placeholder="0" />
+            <span class="discount-suffix">Kč</span>
+          </div>
         </div>
       </section>
 
@@ -186,10 +205,18 @@
             <div class="cp-pkg-desc" id="cp-pkg-desc"></div>
           </div>
           <div class="cp-divider"></div>
-          <div class="cp-section">
+          <div class="cp-section cp-section--highlight">
             <div class="cp-row">
               <span>Jednorázová implementace</span>
               <strong id="cp-one-revenue">—</strong>
+            </div>
+            <div class="cp-row cp-discount-row" id="cp-discount-wrap" style="display:none">
+              <span>Sleva</span>
+              <strong id="cp-discount" class="cp-discount-value">—</strong>
+            </div>
+            <div class="cp-row" id="cp-after-discount-wrap" style="display:none">
+              <span>Celkem po slevě</span>
+              <strong id="cp-one-revenue-after">—</strong>
             </div>
             <div class="cp-row">
               <span>Měsíční fee</span>
@@ -205,14 +232,6 @@
           </div>
           <div class="cp-divider"></div>
           <div class="cp-footer-stats" id="cp-eshops-info">—</div>
-        </div>
-
-        <!-- Internal-only extra section -->
-        <div class="print-internal-extra">
-          <div class="int-section">
-            <div class="int-label">Produkty</div>
-            <div id="int-products-list"></div>
-          </div>
         </div>
 
         <div class="print-logo">
@@ -245,6 +264,14 @@
           <div class="result-row">
             <span class="r-label">Výnos</span>
             <span class="r-value" id="one-revenue">—</span>
+          </div>
+          <div class="result-row" id="int-discount-row" style="display:none">
+            <span class="r-label">Sleva</span>
+            <span class="r-value discount-value" id="int-discount">—</span>
+          </div>
+          <div class="result-row" id="int-revenue-after-row" style="display:none">
+            <span class="r-label">Výnos po slevě</span>
+            <span class="r-value" id="int-revenue-after">—</span>
           </div>
           <div class="result-row">
             <span class="r-label">Náklady</span>
@@ -295,6 +322,14 @@
           <div class="result-row profit-row">
             <span class="r-label">Zisk</span>
             <span class="r-value profit" id="yr-profit">—</span>
+          </div>
+        </div>
+
+        <!-- Internal-only extra section -->
+        <div class="print-internal-extra">
+          <div class="int-section">
+            <div class="int-label">Produkty</div>
+            <div id="int-products-list"></div>
           </div>
         </div>
 
